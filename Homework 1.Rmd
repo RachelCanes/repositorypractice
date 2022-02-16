@@ -1,0 +1,156 @@
+---
+title: "Homework Dates and Times"
+author: "Rachel Carnes"
+date: "`r Sys.Date()`"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(nycflights13)
+library(lubridate)
+library(dplyr)
+```
+# 1) Use and show R coding to find the number of days from June 6th 2020 to July 14th 2021
+
+```{r}
+("2020-06-06" %--% "2021-07-14")%/%days(1)
+
+```
+# 2) Use and show R coding to confirm that the year 1988 was a leap year.
+
+```{r}
+x <- ymd("1988-01-01")
+y <- ymd("1988-01-01") + dyears(1)
+(x %--% y) %/% ddays(1)
+
+
+date1 <- ymd("1988-12-31")
+yday(date1)
+
+1988/4
+
+
+leap_year(date1)
+
+
+```
+
+# 3) Use and show R coding to confirm that the year 1989 was not a leap year.
+
+```{r}
+p <- ymd("1989-01-01")
+q <- ymd("1989-01-01") + dyears(1)
+(p %--% q) %/% ddays(1)
+
+date2 <- ymd("1989-12-31")
+yday(date2)
+
+1989/4
+
+leap_year(date2)
+
+```
+
+# 4)  Why is there months() but no dmonths? (Answer in 3 to four sentences)
+
+You can not do months as a duration because month is not a defined time, it's an interval between dates. Each month also does not have the same number of days, so it would be hard to set it as a duration category. The month() function is still a good function to use when pulling a month from a date or changing the month. 
+
+```{r}
+
+
+```
+
+# 5)  John was born April 11th, 1962. Use and show R coding to determine how old John is in years
+
+```{r}
+john <- ymd("1962-04-11")
+
+johnsage <- john %--% today()/days(365)
+
+johnsage
+
+
+```
+
+# 6) Modify the flights_dt coding in the notes or the book to obtain the following partial data table shown below.  Show all required coding. (Most of the coding needed is provided in the notes)
+
+```{r}
+library(nycflights13)
+view(flights)
+```
+
+```{r}
+head(flights)
+
+make_datetime_100 <- function(year, month, day, time) {
+  make_datetime(year, month, day, time %/% 100, time %% 100)
+}
+
+flights %>% 
+  filter(!is.na(dep_time), !is.na(arr_time)) %>% 
+  mutate(
+    dep_time = make_datetime_100(year, month, day, dep_time),
+    arr_time = make_datetime_100(year, month, day, arr_time),
+    sched_dep_time = make_datetime_100(year, month, day, sched_dep_time),
+    sched_arr_time = make_datetime_100(year, month, day, sched_arr_time)
+  ) %>% 
+  select(origin, dest, carrier, ends_with("delay"), ends_with("time")) ->
+  flights_dt
+
+flights_dt
+
+flights_dt %>%
+  select(origin,dest,carrier,arr_time, dep_time)
+
+ #the tibble graph in the assignment shows 5 variables but we did not see which variable you used. I just added the 4 that were shown in the picture. 
+
+```
+
+# 7) Now, using your table from #6, produce the frequency plot shown which conveys frequency counts for the months of April, July, and October for the year 2013
+
+```{r}
+
+
+flights_dt %>% 
+  mutate(dep_month = month(sched_dep_time)) %>% 
+  filter(dep_month== 4:10) %>%
+  ggplot(mapping = aes(x =sched_dep_time)) +
+  geom_freqpoly(binwidth = 80000)
+
+
+flights_dt %>% 
+  mutate(dep_month = month(dep_time)) %>% 
+  filter(dep_month== 4:10) %>%
+  ggplot(mapping = aes(x =dep_time)) +
+  geom_freqpoly(binwidth = 80000)
+
+
+
+```
+
+# 8) Now use dplyr functions to produce a data table that shows arrival times for American Airlines at the Dallas Fort Worth Airport from the LaGuardia airport in New York. Your output should show rows 115 to 125.A partial table is provided below.
+
+```{r}
+library(dplyr)
+
+flights_dt%>% 
+  filter(carrier == "AA", dest == "DFW", origin == "LGA") %>% 
+  select(origin, dest, carrier, arr_time) %>% 
+  slice(115:125)
+
+
+```
+
+# 9) Using the first two observational date time designations from your #8 table, Use and show R code to confirm that there are 181 minutes time intervals between them.
+
+```{r}
+flight1 <- ymd_hms("2013-01-09 16:16:00")
+flight2 <- ymd_hms("2013-01-09 19:17:00")
+
+(flight1 %--% flight2)%/%minutes(1)
+
+```
+

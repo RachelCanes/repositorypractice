@@ -1,0 +1,131 @@
+---
+title: "DS 413/613  HOMEWORK 3"
+author: "Rachel Carnes and LaSheeda Butler"
+date: "`r Sys.Date()`"
+output:
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# DS 413/613  HOMEWORK 3  Chapter 16  Vectors , Lists , and Functions
+```{r}
+Vector1 <- (c( 10, 19, 121, 83, 63, 7, 77, 61, 51, 97, 123, 41))
+Vector1
+```
+## 1)  For the vector given above, use and show two methods of R coding to extract the first element and the last element.
+```{r}
+length(Vector1)
+Vector1[c(1,12)]
+Vector1[(-2:-11)]
+
+```
+
+## 2)  For the vector given above, use and show two methods of R coding to extract all of the elements that are less than 60.
+```{r}
+Vector1[!Vector1>60]
+Vector1[Vector1<60]
+Vector1[c(1,2,6,9,12)]
+```
+
+## 3)  For the vector given above, use and show two methods of R coding to extract all numbers that are not divisible by 2 or 3.
+```{r}
+Vector1[!Vector1 %%2 == 0 & !Vector1 %%3 == 0 ]
+
+
+divnum <- function(x){
+  (x %% 2 == 0 | x %% 3==0)}
+   
+Vector1[!divnum(Vector1)]
+
+```
+
+## 4)  Use and show two R coding methods to confirm that Vector1 does not have missing values
+
+(note: it is better to type the list into R studio or R markdown. Do not copy and paste)
+Use the list above for problems 4 – 6.
+```{r}
+myList <-list(TRUE,12.35, "pear", 48,c=3:8, list(23,"team"))
+
+myList   
+
+myList[is.na(myList)]
+myList["NA"]
+
+Vector1[is.na(Vector1)]
+Vector1["NA"]
+Vector1[!is.na(Vector1)]
+# We used myList, we were not sure which list you were referring to for questions 4-6. 
+```
+
+## 5) For the list given above, use and show R coding to confirm that “pear” is a character element.
+```{r}
+myList <-list(TRUE,12.35, "pear", 48,c=3:8, list(23,"team"))
+
+myList 
+str(myList[[3]])
+
+
+```
+
+## 6) For the list given above, use and show R coding to extract the first three elements of the list.
+```{r}
+myList[1:3]
+```
+
+## 7) Use the $ operator to extract the element “pear” from your list. Be sure to use and show required R code to produce the requested output.
+```{r}
+myList <-  list(TRUE, 12.35, R= 'pear', 48, c = 3:8, list(23, 'team'))
+myList
+
+myList$R
+
+```
+
+## 8) Use and show R code to write a function to solve the following quadratic equations by using the quadratic formula.  (all equations have two real number solutions)
+
+
+a)  x2- 3x - 28 = 0                                                     
+
+
+b)  x2 + x  - 30 = 0                                                    
+
+
+c) 3x2+ 14x + 8 = 0                                                     
+
+
+d) 2x2+11x = 6
+```{r}
+quad <- function(a, b, c) {
+  x1 = (-b + sqrt(b^2 -4*a*c))/2*a
+  x2 = (-b - sqrt(b^2 -4*a*c))/2*a
+  print(c(x1,x2))
+}
+quad(1,-3,-28)
+quad(1,1,-30)
+quad(3,14,8)
+quad(2,11,0)
+
+```
+
+## 9) In your book (towards the end of chapter 16) a special set of vectors are defined as Augmented Vectors.  One such augmented vector is a Tibble. Use and show R code that will produce the Tibble shown below.
+Do not simply type or copy and paste. You must show and use R coding that will output the tibble.
+```{r}
+library(tidyverse)
+tibble(
+  x=1:10,
+  y=10:1,
+  z=(y/2)
+) -> table
+table
+```
+
+## 10) In statistics, the Interquartile Range is the difference between Q3 and Q1.  Now show and use map function coding to find the Interquartile Range for each column of the tibble from number 9.
+
+```{r}
+summary(table) 
+map_dbl(table,IQR)
+
+```
+
